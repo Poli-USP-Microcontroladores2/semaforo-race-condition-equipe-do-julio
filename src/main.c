@@ -3,7 +3,7 @@
 #include <zephyr/device.h>
 #include <zephyr/logging/log.h>
 
-LOG_MODULE_REGISTER(race_condition_demo, LOG_LEVEL_INF);
+LOG_MODULE_REGISTER(race_condition_demo_fixed, LOG_LEVEL_INF);
 
 // === LEDs ===
 #define LED_A_NODE DT_ALIAS(led0)   // LED verde
@@ -12,17 +12,16 @@ LOG_MODULE_REGISTER(race_condition_demo, LOG_LEVEL_INF);
 static const struct gpio_dt_spec ledA = GPIO_DT_SPEC_GET(LED_A_NODE, gpios);
 static const struct gpio_dt_spec ledB = GPIO_DT_SPEC_GET(LED_B_NODE, gpios);
 
-// === Variáveis compartilhadas ===
+// === Variável compartilhada e mutex ===
 volatile int contador_compartilhado = 0;
+K_MUTEX_DEFINE(contador_mutex);   // protege o acesso ao contador
 
 // === Configurações das threads ===
 #define STACK_SIZE 512
 #define THREAD_A_PRIO 5
 #define THREAD_B_PRIO 5
 
-// === Funções auxiliares ===
 void delay_curto(void) {
-    // Simula tempo de processamento (gera chance de race condition)
     for (volatile int i = 0; i < 100000; i++) {}
 }
 
@@ -31,12 +30,20 @@ void thread_A(void *p1, void *p2, void *p3)
 {
     while (1) {
         gpio_pin_set_dt(&ledA, 1);
+
+        // Entra na seção crítica
+        k_mutex_lock(&contador_mutex, K_FOREVER);
+
         int valor_local = contador_compartilhado;
         delay_curto();
         valor_local++;
         contador_compartilhado = valor_local;
 
         LOG_INF("Thread A -> contador = %d", contador_compartilhado);
+
+        // Sai da seção crítica
+        k_mutex_unlock(&contador_mutex);
+
         gpio_pin_set_dt(&ledA, 0);
         k_msleep(200);
     }
@@ -47,12 +54,18 @@ void thread_B(void *p1, void *p2, void *p3)
 {
     while (1) {
         gpio_pin_set_dt(&ledB, 1);
+
+        k_mutex_lock(&contador_mutex, K_FOREVER);
+
         int valor_local = contador_compartilhado;
         delay_curto();
         valor_local++;
         contador_compartilhado = valor_local;
 
         LOG_INF("Thread B -> contador = %d", contador_compartilhado);
+
+        k_mutex_unlock(&contador_mutex);
+
         gpio_pin_set_dt(&ledB, 0);
         k_msleep(200);
     }
@@ -73,10 +86,9 @@ void main(void)
     gpio_pin_configure_dt(&ledA, GPIO_OUTPUT_INACTIVE);
     gpio_pin_configure_dt(&ledB, GPIO_OUTPUT_INACTIVE);
 
-    LOG_INF("=== Demonstração de Race Condition ===");
-    LOG_INF("Dois threads incrementam o mesmo contador sem proteção.");
-    LOG_INF("Observe o log — valores podem se repetir ou pular.");
-    LOG_INF("Thread A (LED Verde), Thread B (LED Vermelho)");
+    LOG_INF("=== Versão Corrigida com Mutex ===");
+    LOG_INF("Threads agora acessam o contador de forma exclusiva.");
+    LOG_INF("O valor nunca se repete nem é perdido.");
 
     while (1) {
         k_sleep(K_FOREVER);
