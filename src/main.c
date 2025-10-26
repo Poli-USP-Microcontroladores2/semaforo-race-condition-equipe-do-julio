@@ -23,8 +23,6 @@ struct k_thread thread_b_data;
 K_SEM_DEFINE(sem_thread_a_done, 0, 1);
 K_SEM_DEFINE(sem_thread_b_done, 0, 1);
 
-// --- Mutex ---
-K_MUTEX_DEFINE(mutex_racecondition);
 
 /*
  * Thread que incrementa o contador global.
@@ -41,11 +39,14 @@ void incrementer_thread(void *p1, void *p2, void *p3)
 
         // --- Início da Seção Crítica ---
 
-        k_mutex_lock(&mutex_racecondition, K_FOREVER); //Obtem o mutex
+        k_sched_lock(); // Bloqueia o escalonador
+
         int local_counter = g_shared_counter;
         local_counter++;
         g_shared_counter = local_counter;
-        k_mutex_unlock(&mutex_racecondition); // Libera o mutex
+
+        k_sched_unlock(); // Libera  o escalonador
+
 
         // --- Fim da Seção Crítica ---
 
@@ -60,11 +61,11 @@ void incrementer_thread(void *p1, void *p2, void *p3)
  */
 int main(void)
 {
-    LOG_INF("--- Race Condition - Corrigido com Mutex---");
+    LOG_INF("--- Race Condition - Corrigido com Lock Manual---");
     LOG_INF("Versão compilada em: %s - %s", __DATE__, __TIME__ );
     LOG_INF("Duas threads irao incrementar um contador %d vezes cada.", INCREMENT_COUNT);
     LOG_INF("Valor inicial do contador: %d", g_shared_counter);
-    LOG_INF("Tempo estimado para concluir: 2 minutos!");
+    LOG_INF("Tempo estimado para concluir: 7 segundos!");
     LOG_INF("Iniciando threads...\n");
 
     k_msleep(100); // Pequena pausa para o log ser impresso
