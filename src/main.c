@@ -11,7 +11,7 @@ volatile int g_shared_counter = 0;
 // --- Configuração das Threads ---
 #define STACK_SIZE 1024
 #define THREAD_PRIORITY 5 // Prioridade igual para ambas as threads
-#define INCREMENT_COUNT 1000000
+#define INCREMENT_COUNT 100000
 
 // --- Threads ---
 K_THREAD_STACK_DEFINE(thread_a_stack_area, STACK_SIZE);
@@ -22,6 +22,9 @@ struct k_thread thread_b_data;
 // --- Semáforo para sinalizar o fim ---
 K_SEM_DEFINE(sem_thread_a_done, 0, 1);
 K_SEM_DEFINE(sem_thread_b_done, 0, 1);
+
+// --- Mutex ---
+K_MUTEX_DEFINE(mutex_racecondition);
 
 /*
  * Thread que incrementa o contador global.
@@ -37,9 +40,13 @@ void incrementer_thread(void *p1, void *p2, void *p3)
     for (int i = 0; i < INCREMENT_COUNT; i++) {
 
         // --- Início da Seção Crítica ---
+
+        k_mutex_lock(&mutex_racecondition, K_FOREVER); //Obtem o mutex
         int local_counter = g_shared_counter;
         local_counter++;
         g_shared_counter = local_counter;
+        k_mutex_unlock(&mutex_racecondition); // Libera o mutex
+
         // --- Fim da Seção Crítica ---
 
     }
@@ -53,10 +60,11 @@ void incrementer_thread(void *p1, void *p2, void *p3)
  */
 int main(void)
 {
-    LOG_INF("--- Race Condition ---");
+    LOG_INF("--- Race Condition - Corrigido com Mutex---");
     LOG_INF("Versão compilada em: %s - %s", __DATE__, __TIME__ );
     LOG_INF("Duas threads irao incrementar um contador %d vezes cada.", INCREMENT_COUNT);
     LOG_INF("Valor inicial do contador: %d", g_shared_counter);
+    LOG_INF("Tempo estimado para concluir: 10 segundos!");
     LOG_INF("Iniciando threads...\n");
 
     k_msleep(100); // Pequena pausa para o log ser impresso
