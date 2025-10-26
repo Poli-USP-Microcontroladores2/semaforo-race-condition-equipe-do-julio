@@ -23,7 +23,6 @@ struct k_thread thread_b_data;
 K_SEM_DEFINE(sem_thread_a_done, 0, 1);
 K_SEM_DEFINE(sem_thread_b_done, 0, 1);
 
-
 /*
  * Thread que incrementa o contador global.
  * Esta função é executada por duas threads diferentes.
