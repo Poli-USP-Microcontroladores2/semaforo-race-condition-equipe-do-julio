@@ -17,7 +17,7 @@ No repositório do grupo, incluir:
 3. Evidências (prints, logs, vídeos curtos, etc.) da execução dos testes.
 
 ---
-## Relatório
+# Relatório da Equipe
 
 ### Integrantes:
 - Alberto Galhego Neto - NUSP 17019141
@@ -62,7 +62,7 @@ O código foi testado em 3 situações distintas:
 - Código corrigido via k_sched_lock: `Alberto-Codigo-com-Lock-Manual/`
 
 ### Evidências:
-- As evidências de execução (incluindo prints, logs, tabelas e resultados), bem como um detalhamento maior dos testes realizados, podem ser encontrados no arquivo Alberto.pdf, presente na raiz desse repositório.
+- As evidências de execução (incluindo prints, logs, tabelas e resultados), bem como um detalhamento maior dos testes realizados, podem ser encontrados no arquivo `Alberto.pdf`, presente na raiz desse repositório.
 
 ---
 
