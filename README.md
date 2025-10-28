@@ -62,7 +62,7 @@ O código foi testado em 3 situações distintas:
 - Código corrigido via k_sched_lock: `Alberto-Codigo-com-Lock-Manual/`
 
 ### Evidências:
-- As evidências de execução (prints, logs, tabelas e resultados), assim como um detalhamento maior dos testes realizados pode ser encontrado no arquivo `Alberto.pdf`, presente na raiz desse repositório.
+- As evidências de execução (incluindo prints, logs, tabelas e resultados), bem como um detalhamento maior dos testes realizados, podem ser encontrados no arquivo Alberto.pdf, presente na raiz desse repositório.
 
 ---
 
