@@ -31,10 +31,10 @@ No repositório do grupo, incluir:
 - Nessa implementação, cada thread realiza a mesma tarefa: ela lê o valor do contador global, armazena esse valor em uma variável local, incrementa a variável local em 1, aguarda um breve período (delay) e, em seguida, atualiza o contador global com o valor da variável local. Esta operação é repetida 1000 vezes por cada thread, sendo aguardado um delay igual ao do período de execução após cada ciclo. Ao concluir, o programa exibe o valor final do contador global, assim como o valor esperado.
 
 ### Casos de Teste:
-- O código foi testado em 3 situações distintas:
-   - Cenário 1: Caso base, prioridades iguais, delay de 2ms para ambas.
-   - Cenário 2: Thread A com maior prioridade que B, delay de 2ms para ambas.
-   - Cenário 3: Thread A com maior prioridade que B, delay de 0ms para A.
+O código foi testado em 3 situações distintas:
+- Cenário 1: Caso base, prioridades iguais, delay de 2ms para ambas.
+- Cenário 2: Thread A com maior prioridade que B, delay de 2ms para ambas.
+- Cenário 3: Thread A com maior prioridade que B, delay de 0ms para A.
 
 ### Descrição da Race Condition:
 - Em 2 dos 3 cenários testados (cenários 1 e 2), há a ocorrência de Race Condition. Nesses casos, o acesso simultâneo do mesmo recurso fez com que o valor final do contador fosse diferente do esperado.
