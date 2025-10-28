@@ -56,7 +56,6 @@ O código foi testado em 3 situações distintas:
    - Em ambas as versões corrigidas, com lock manual e com Mutex, o resultado final do contador global é o mesmo valor que o esperado.
    - Ambas apresentam comportamento estável e consistente após diversas execuções.
 
-
 ### Repositórios de Código-fonte:
 - Código fonte original: `Alberto-Código-Original-com-Race-Condition/`
 - Código corrigido via k_mutex_lock:  `Alberto-Codigo-com-Mutex/`
@@ -68,4 +67,40 @@ O código foi testado em 3 situações distintas:
 ---
 
 ## Código - Júlio:
+### Revisão do código anterior
+O código original utiliza um contador global sendo incrementado por duas Threads (A e B) independentes, de mesma prioridade e tempo de espera, usando, também, uma função auxiliar que simula o tempo de execução.
+Tal código resulta em uma contagem duplicada no contador, sendo: A: 1, B: 1, A: 2, B: 2, A: 3, B: 3…, no caso base gerado pela IA. O erro ocorre em toda a execução do código, desde o começo.
 
+### Planejamento de Testes
+Os casos de teste criados e executados são:
+
+| Caso de Teste | Pré-condição | Etapas de Teste | Pós-condição Observada | Conclusão |
+|----------------|---------------|------------------|--------------------------|------------|
+| **1 – Mesmas prioridades e tempos iguais (Caso base)** | THREAD_A_PRIO = 5, THREAD_B_PRIO = 5<br>k_msleep(200) em ambas. | Compilar e executar o código original.<br>Observar logs no terminal. | Contador cresce em sequência duplicada (1,1,2,2,3,3...).<br>Nenhum salto, mas valores se repetem. | Threads acessam o contador simultaneamente.<br>O comportamento é previsível, porém incorreto. |
+| **2 – Diferença de temporização** | THREAD_A_PRIO = 5, THREAD_B_PRIO = 5<br>k_msleep(A)=130 ms, k_msleep(B)=100 ms. | Executar o código e observar logs. | Contador se dessincroniza: valores se repetem e/ou saltam (4,4,5,6,6,7...).<br>LEDs piscam em ritmos diferentes. | O problema se manifesta claramente — cada thread sobrescreve o valor da outra. |
+| **3 – Alteração de prioridade (tentativa de mitigação)** | THREAD_A_PRIO = 4, THREAD_B_PRIO = 5<br>(A tem prioridade mais alta). | Executar e observar o comportamento. | Contador aparece correto (1,2,3,4...), sem repetições. | A race condition foi mascarada: o escalonador impede a preempção, mas o problema lógico ainda existe. |
+
+### Correção e Reteste
+Em seguida, foram feitas as devidas correções no código, adicionando um mutex para controlar o acesso ao recurso compartilhado (contador global), de modo a evitar a Race condition.
+Dessa forma, o contador agora é incrementado corretamente, apresentando uma sequência como: A: 1, B: 2, A: 3, B: 4, A: 5, B: 6…
+Ou seja, cada Thread incrementa o contador em 1 alternadamente, sem haver competição pelo recurso e sem causar comportamento indesejado ou imprevisível.
+A tabela com os retestes realizados e seus resultados e conclusões está registrada abaixo:
+
+| Caso de Teste | Mudança Aplicada | Etapas de Reteste | Pós-condição Esperada (resultado após correção) |
+|----------------|------------------|--------------------|--------------------------------------------------|
+| **1 – Mesmo cenário original (200 ms / 200 ms)** | Inserção de `k_mutex_lock()` e `k_mutex_unlock()` envolvendo a manipulação de `contador_compartilhado`. | Executar novamente. | Contador cresce corretamente (1,2,3,4...). Nenhuma repetição, mesmo com mesma prioridade. |
+| **2 – Temporização diferente (130 ms / 100 ms)** | Mesma proteção por mutex. | Executar novamente com tempos diferentes. | Contador consistente (1,2,3,4...). LEDs piscam fora de fase, mas contagem é linear. |
+| **3 – Alteração de prioridade (4 / 5)** | Teste de robustez com prioridades diferentes. | Executar e observar. | Contagem correta e previsível em qualquer ordem de execução. |
+
+### Avaliação Cruzada Realizada pelo Alberto:
+- Contexto: duas threads independentes que acessam o mesmo contador global.
+- Problema encontrado: Devido ao acesso simultâneo ao mesmo recurso, ocorre uma contagem duplicada, onde ao invés de incrementarem de maneira conjunta o contador, ambas as threads acabam definindo o mesmo valor. O resultado é estável, mas incorreto. Esse comportamento pode ser observado através dos valores exibidos nos Logs do programa.
+- Comportamento antes da mudança: O resultado do contador era muito diferente do valor esperado, com o resultado variando conforme as diferentes combinações de temporização e prioridades.
+- O que mudou com a correção: Após a implementação do uso de mutex, o contador passou a se comportar da maneira esperada, incremental e constante. Não são verificadas repetições de contagem, independente da combinação de temporização e prioridade. Resultado estável e correto.
+
+### Repositórios do Código-fonte:
+- Código fonte original: `Codigo_original-Julio/`
+- Código corrigido via mutex: `codigo_corrigido-Julio/`
+
+### Evidências:
+- As evidências de execução (incluindo prints, logs, tabelas e resultados), bem como um detalhamento maior dos testes realizados, podem ser encontrados no arquivo `Julio.pdf`, presente na raiz desse repositório.
