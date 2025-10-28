@@ -10,7 +10,8 @@ volatile int g_shared_counter = 0;
 
 // --- Configuração das Threads ---
 #define STACK_SIZE 1024
-#define THREAD_PRIORITY 5 // Prioridade igual para ambas as threads
+#define THREAD_A_PRIORITY 5 // Prioridade  para a Thread A
+#define THREAD_B_PRIORITY 5 // Prioridade  para a Thread B
 #define INCREMENT_COUNT 1000000
 
 // --- Threads ---
@@ -65,20 +66,20 @@ int main(void)
     k_thread_create(&thread_a_data, thread_a_stack_area,
                     K_THREAD_STACK_SIZEOF(thread_a_stack_area),
                     incrementer_thread, "A", &sem_thread_a_done, NULL,
-                    THREAD_PRIORITY, 0, K_NO_WAIT);
+                    THREAD_A_PRIORITY, 0, K_NO_WAIT);
 
     // Cria e inicia a Thread B
     k_thread_create(&thread_b_data, thread_b_stack_area,
                     K_THREAD_STACK_SIZEOF(thread_b_stack_area),
                     incrementer_thread, "B", &sem_thread_b_done, NULL,
-                    THREAD_PRIORITY, 0, K_NO_WAIT);
+                    THREAD_B_PRIORITY, 0, K_NO_WAIT);
 
     // Aguarda as duas threads terminarem
     k_sem_take(&sem_thread_a_done, K_FOREVER);
     k_sem_take(&sem_thread_b_done, K_FOREVER);
 
     // Imprime o resultado final
-    LOG_INF("\n--- Resultado ---");
+    LOG_INF("--- Resultado ---");
     LOG_INF("Ambas as threads terminaram.");
     LOG_INF("Valor final do contador: %d", g_shared_counter);
     LOG_INF("Valor final esperado (sem race condition): %d", INCREMENT_COUNT * 2);
