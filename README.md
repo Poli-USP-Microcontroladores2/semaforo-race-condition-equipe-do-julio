@@ -32,7 +32,7 @@ No repositório do grupo, incluir:
 
 ### Casos de Teste:
 O código foi testado em 3 situações distintas:
-- Cenário 1: Caso base, prioridades iguais, delay de 2ms para ambas.
+- Cenário 1: Caso base, prioridades iguais, delay de 2ms para ambas as threads.
 - Cenário 2: Thread A com maior prioridade que B, delay de 2ms para ambas.
 - Cenário 3: Thread A com maior prioridade que B, delay de 0ms para A.
 
