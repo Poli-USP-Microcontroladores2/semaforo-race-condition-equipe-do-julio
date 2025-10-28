@@ -12,7 +12,7 @@ volatile int g_shared_counter = 0;
 #define STACK_SIZE 1024
 #define THREAD_A_PRIORITY 5 // Prioridade  para a Thread A
 #define THREAD_B_PRIORITY 5 // Prioridade  para a Thread B
-#define THREAD_A_DELAY 10
+#define THREAD_A_DELAY 5
 #define THREAD_B_DELAY 5
 #define INCREMENT_COUNT 1000
 
