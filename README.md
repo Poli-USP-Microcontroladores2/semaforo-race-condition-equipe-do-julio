@@ -21,6 +21,8 @@ Integrantes:
    - Alberto Galhego Neto - NUSP 17019141
    - Júlio Cesar Braga Parro – NUSP 16879560
 
+---
+
 Código - Alberto:
    - Cenário Escolhido: 
       - O código original consiste em um contador incremental único (global) que é operado simultaneamente por duas threads (A e B), ambas possuindo prioridades idênticas (5).
