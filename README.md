@@ -57,7 +57,7 @@ O código foi testado em 3 situações distintas:
    - Ambas apresentam comportamento estável e consistente após diversas execuções.
 
 
-### Código-fonte:
+### Repositórios de Código-fonte:
 - Código fonte original: `Alberto-Código-Original-com-Race-Condition/`
 - Código corrigido via k_mutex_lock:  `Alberto-Codigo-com-Mutex/`
 - Código corrigido via k_sched_lock: `Alberto-Codigo-com-Lock-Manual/`
