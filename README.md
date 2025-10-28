@@ -40,7 +40,7 @@ Código - Alberto:
       - Ambas as soluções foram implementadas e testadas de acordo com os cenários aplicados no código original.
       - Após os testes, verificou-se a eliminação da condição de Race Condition.
 
-   -Código-fonte:
+   - Código-fonte:
       - Código fonte original: `Alberto-Código-Original-com-Race-Condition/`
       - Código corrigido via k_mutex_lock:  `Alberto-Codigo-com-Mutex/`
       - Código corrigido via k_sched_lock: `Alberto-Codigo-com-Lock-Manual/`
