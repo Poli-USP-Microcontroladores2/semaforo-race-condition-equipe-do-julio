@@ -38,7 +38,7 @@ O código foi testado em 3 situações distintas:
 
 ### Descrição da Race Condition:
 - Em 2 dos 3 cenários testados (cenários 1 e 2), há a ocorrência de Race Condition. Nesses casos, o acesso simultâneo do mesmo recurso fez com que o valor final do contador fosse diferente do esperado.
-- No cenário 3, não foi verificada a ocorrência de Race Condition, mas também não houve acesso simultâneo do mesmo recurso. Por possuir prioridade maior e o delay ter sido definido como 0, a Thread B só iniciou sua execução após o término da Thread A.
+- No cenário 3, não foi verificada a ocorrência de Race Condition, mas também não houve acesso simultâneo do mesmo recurso. Por possuir prioridade maior e o delay de A ter sido definido como 0, a Thread A só permite o início de B após o término de todos os ciclos de A.
 
 ### Solução:
 - Foram propostas 2 possíveis soluções para o problema inicial: a implementação da função k_sched_lock(), que realiza manualmente o bloqueio do scheduler, e o uso de k_mutex_lock(), que abstrai essa operação através do uso de mutex.
