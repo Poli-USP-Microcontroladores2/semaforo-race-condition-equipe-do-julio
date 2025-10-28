@@ -2,46 +2,6 @@
 # PSI-Microcontroladores2-Aula06
 Atividade: Resolução de Race Condition com Semáforo
 
-## 🎯 Objetivos da Atividade
-Nesta atividade, os alunos deverão:
-- Retomar o código gerado por IA em atividade anterior que apresenta **condições de corrida (race conditions)**.
-- Trabalhar em **duplas ou trios**, com **avaliação cruzada interna** entre os integrantes do grupo.
-- Aplicar **testes estruturados** com pré-condição, etapas de teste e pós-condição.
-- Demonstrar como o problema de concorrência foi **identificado e resolvido** com uso de semáforo.
-
-## 🧠 Etapas da Atividade
-
-### **1️⃣ Revisão do Código Anterior**
-- Cada integrante do grupo deverá **executar o código do colega** que contém a race condition original.
-- Documentar:
-  - O comportamento incorreto observado.
-  - O momento em que o erro ocorre (condição específica, sequência de eventos, etc.).
-
-### **2️⃣ Planejamento de Testes**
-Para cada cenário, descreva **três casos de teste** seguindo o formato abaixo:
-
-| Caso de Teste | Pré-condição | Etapas de Teste | Pós-condição Esperada |
-|----------------|---------------|------------------|------------------------|
-| 1 | ... | ... | ... |
-| 2 | ... | ... | ... |
-| 3 | ... | ... | ... |
-
-### **3️⃣ Correção e Reteste**
-- Corrigir o código para **eliminar a race condition**.
-- Reexecutar **os mesmos casos de teste** e registrar:
-  - As mudanças feitas.
-  - O resultado após a correção com evidências (capturas de tela por exemplo).
-
-### **4️⃣ Avaliação Interna (entre colegas do mesmo grupo)**
-Cada integrante deverá:
-1. Executar o código original do colega conforme os testes planejados.
-2. Executar o código corrigido do colega conforme os testes planejados.
-3. Conferir se as condições de corrida foram eliminadas.  
-4. Registrar uma **avaliação curta** (pode ser no final do README):
-   - O que estava errado antes.  
-   - O que mudou com a correção.
-   - Se o comportamento agora é estável.  
-
 ## 📦 Entregáveis
 
 No repositório do grupo, incluir:
@@ -57,5 +17,16 @@ No repositório do grupo, incluir:
 3. Evidências (prints, logs, vídeos curtos, etc.) da execução dos testes.
 
 ---
+Integrantes:
+   - Alberto Galhego Neto - NUSP 17019141
+   - Júlio Cesar Braga Parro – NUSP 16879560
 
-**Repositório:** entregue via GitHub Classroom (um repositório por grupo) e um PDF do markdown final no Moodle.
+Código - Alberto:
+   - Cenário Escolhido: 
+      - O código original consiste em um contador incremental único (global) que é operado simultaneamente por duas threads (A e B), ambas possuindo prioridades idênticas (5).
+      - Nessa implementação, cada thread realiza a mesma tarefa: ela lê o valor do contador global, armazena esse valor em uma variável local, incrementa a variável local em 1, aguarda um breve período (delay) e, em seguida, atualiza o contador global com o valor da variável local. Esta operação é repetida 1000 vezes por cada thread, sendo aguardado um delay igual ao do período de execução após cada ciclo. Ao concluir, o programa exibe o valor final do contador global, assim como o valor esperado.
+   - Casos de Teste:
+      - O código foi testado em 3 situações distintas:
+         - Cenário 1: Caso base, prioridades iguais, delay de 2ms para ambas.
+         - Cenário 2: Thread A com maior prioridade que B, delay de 2ms para ambas.
+         - Cenário 3: Thread A com maior prioridade que B, delay de 0ms para A.
