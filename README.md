@@ -17,9 +17,11 @@ No repositório do grupo, incluir:
 3. Evidências (prints, logs, vídeos curtos, etc.) da execução dos testes.
 
 ---
-Integrantes:
-   - Alberto Galhego Neto - NUSP 17019141
-   - Júlio Cesar Braga Parro – NUSP 16879560
+## Relatório
+
+### Integrantes:
+- Alberto Galhego Neto - NUSP 17019141
+- Júlio Cesar Braga Parro – NUSP 16879560
 
 ---
 
