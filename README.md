@@ -45,6 +45,17 @@ No repositório do grupo, incluir:
 - Ambas as soluções foram implementadas e testadas de acordo com os cenários aplicados no código original.
 - Após os testes, verificou-se a eliminação da condição de Race Condition.
 
+### Avaliação Realizada pelo Júlio:
+- Contexto: Duas threads independentes que acessam o mesmo contador global.
+- O código já faz um auto-diagnóstico de funcionamento, mostrando automaticamente no monitor serial o valor final do contador e o valor final esperado, de modo a evidenciar o problema.
+- Código original:
+   - Nas condições 1 e 2, o resultado final do contador é diferente do resultado esperado, sendo verificado a ocorrência de race condition.
+   - Na condição 3, a race condition foi mascarada ao alterar as prioridades e remover o delay de A. Nessas condições a race condition não ocorre, pois a Thread B só passa a executar após o término de todos os ciclos da Thread A, não ocorrendo o uso compartilhado e simultâneo do mesmo recurso, que poderia gerar o problema.
+- Código corrigido:
+   - Em ambas as versões corrigidas, com lock manual e com Mutex, o resultado final do contador global é o mesmo valor que o esperado.
+   - Ambas apresentam comportamento estável e consistente após diversas execuções.
+
+
 ### Código-fonte:
 - Código fonte original: `Alberto-Código-Original-com-Race-Condition/`
 - Código corrigido via k_mutex_lock:  `Alberto-Codigo-com-Mutex/`
