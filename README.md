@@ -45,7 +45,7 @@ No repositório do grupo, incluir:
 - Ambas as soluções foram implementadas e testadas de acordo com os cenários aplicados no código original.
 - Após os testes, verificou-se a eliminação da condição de Race Condition.
 
-### Avaliação Realizada pelo Júlio:
+### Avaliação Cruzada Realizada pelo Júlio:
 - Contexto: Duas threads independentes que acessam o mesmo contador global.
 - O código já faz um auto-diagnóstico de funcionamento, mostrando automaticamente no monitor serial o valor final do contador e o valor final esperado, de modo a evidenciar o problema.
 - Código original:
