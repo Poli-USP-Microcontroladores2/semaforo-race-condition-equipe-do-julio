@@ -6,7 +6,7 @@
 LOG_MODULE_REGISTER(RACE_CONDITION_DEMO, LOG_LEVEL_INF);
 
 // --- Recurso Compartilhado ---
-volatile int g_shared_csounter = 0;
+volatile int g_shared_counter = 0;
 
 // --- Configuração das Threads ---
 #define STACK_SIZE 1024
@@ -68,9 +68,10 @@ void incrementer_thread(void *p1, void *p2, void *p3)
 int main(void)
 {
     LOG_INF("--- Race Condition - Corrigido com Mutex---");
-    LOG_INF("Versão compilada em: %s - %s", __DATE__, __TIME__ );
+    LOG_INF("Versao compilada em: %s - %s", __DATE__, __TIME__ );
     LOG_INF("Duas threads irao incrementar um contador %d vezes cada.", INCREMENT_COUNT);
     LOG_INF("Valor inicial do contador: %d", g_shared_counter);
+    LOG_INF("Tempo estimado para concluir: 2 minutos!");
     LOG_INF("Iniciando threads...\n");
 
     k_msleep(100); // Pequena pausa para o log ser impresso
