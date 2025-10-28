@@ -12,8 +12,8 @@ volatile int g_shared_counter = 0;
 #define STACK_SIZE 1024
 #define THREAD_A_PRIORITY 5 // Prioridade  para a Thread A
 #define THREAD_B_PRIORITY 5 // Prioridade  para a Thread B
-#define THREAD_A_DELAY 5
-#define THREAD_B_DELAY 5
+#define THREAD_A_DELAY 2
+#define THREAD_B_DELAY 2
 #define INCREMENT_COUNT 1000
 
 // --- Threads ---
@@ -44,7 +44,7 @@ void incrementer_thread(void *p1, void *p2, void *p3)
 
         // --- Início da Seção Crítica ---
         int local_counter = g_shared_counter;
-        k_msleep(2); //Simular Processamento
+        k_msleep(delay); //Simular Processamento
         local_counter++;
         g_shared_counter = local_counter;
 
