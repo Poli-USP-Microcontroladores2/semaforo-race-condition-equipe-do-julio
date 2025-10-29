@@ -80,6 +80,23 @@ Os casos de teste criados e executados são:
 | **2 – Diferença de temporização** | THREAD_A_PRIO = 5, THREAD_B_PRIO = 5<br>k_msleep(A)=130 ms, k_msleep(B)=100 ms. | Executar o código e observar logs. | Contador se dessincroniza: valores se repetem e/ou saltam (4,4,5,6,6,7...).<br>LEDs piscam em ritmos diferentes. | O problema se manifesta claramente — cada thread sobrescreve o valor da outra. |
 | **3 – Alteração de prioridade (tentativa de mitigação)** | THREAD_A_PRIO = 4, THREAD_B_PRIO = 5<br>(A tem prioridade mais alta). | Executar e observar o comportamento. | Contador aparece correto (1,2,3,4...), sem repetições. | A race condition foi mascarada: o escalonador impede a preempção, mas o problema lógico ainda existe. |
 
+Os testes realizados nas diferentes condições estão registrados abaixo em formato de printscreen dos Logs obtidos em cada caso:
+
+Caso 1: Mesmas prioridades e tempos iguais
+
+<img width="750" height="500" alt="caso1_original" src="https://github.com/user-attachments/assets/3ababe8f-9863-4edf-9faf-9c987b6ca5c7" />
+
+
+Caso 2: Diferença de temporização
+
+<img width="750" height="500" alt="caso2_original" src="https://github.com/user-attachments/assets/f8bfb4e1-96a3-4660-8d22-c40e8e71c26b" />
+
+
+Caso 3: Prioridades diferentes
+
+<img width="750" height="500" alt="caso3_original" src="https://github.com/user-attachments/assets/2e7d1bd2-73be-4a66-92ca-0b9949fcde47" />
+
+
 ### Correção e Reteste
 Em seguida, foram feitas as devidas correções no código, adicionando um mutex para controlar o acesso ao recurso compartilhado (contador global), de modo a evitar a Race condition.
 Dessa forma, o contador agora é incrementado corretamente, apresentando uma sequência como: A: 1, B: 2, A: 3, B: 4, A: 5, B: 6…
@@ -91,6 +108,23 @@ A tabela com os retestes realizados e seus resultados e conclusões está regist
 | **1 – Mesmo cenário original (200 ms / 200 ms)** | Inserção de `k_mutex_lock()` e `k_mutex_unlock()` envolvendo a manipulação de `contador_compartilhado`. | Executar novamente. | Contador cresce corretamente (1,2,3,4...). Nenhuma repetição, mesmo com mesma prioridade. |
 | **2 – Temporização diferente (130 ms / 100 ms)** | Mesma proteção por mutex. | Executar novamente com tempos diferentes. | Contador consistente (1,2,3,4...). LEDs piscam fora de fase, mas contagem é linear. |
 | **3 – Alteração de prioridade (4 / 5)** | Teste de robustez com prioridades diferentes. | Executar e observar. | Contagem correta e previsível em qualquer ordem de execução. |
+
+Os retestes realizados com o código atualizado estão registrados abaixo, por meio de printscreen dos Logs apresentados no Serial Monitor:
+
+Caso 1: Mesma prioridade e tempos iguais
+
+<img width="750" height="500" alt="caso1_corrigido" src="https://github.com/user-attachments/assets/7de2742f-d764-44fd-a8f9-3437adb54def" />
+
+
+Caso 2: Diferença de temporização
+
+<img width="750" height="500" alt="caso2_corrigido" src="https://github.com/user-attachments/assets/63d48073-72fc-43f9-8315-2877dac67e39" />
+
+
+Caso 3: Diferentes prioridades
+
+<img width="750" height="500" alt="caso3_corrigido" src="https://github.com/user-attachments/assets/cdc53f18-b831-4c15-9ca7-163eb9f640d5" />
+
 
 ### Avaliação Cruzada Realizada pelo Alberto:
 - Contexto: duas threads independentes que acessam o mesmo contador global.
